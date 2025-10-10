@@ -4,7 +4,7 @@ import requests
 
 def physical_climate_risks_single(client: Client, Item_Longitude: float, Item_Latitude: float, Item_Origination_Date: str,
                                   Item_Maturity_Date: str, Item_Nace_Code: str, Counterparty_Id: str = "dummy", Transaction_Id: str = "dummy",
-                                  Item_Id: str = "dummy", Score_Preset_Code: str = None, Item_Radius = None) -> dict:
+                                  Item_Id: str = "dummy", Score_Preset_Code: str = None, Item_Radius = None, Item_Center_Weight = None, Maximum_Assessment = False) -> dict:
 
     url = f"{client.institution.url_prefix}/api/v3.5/Calculation/CalculateSinglePhysicalRisks"
     payload = {
@@ -17,8 +17,13 @@ def physical_climate_risks_single(client: Client, Item_Longitude: float, Item_La
         "Item_Origination_Date": Item_Origination_Date,
         "Item_Maturity_Date": Item_Maturity_Date,
         "Item_NACE_Code": Item_Nace_Code,
-        "Item_Radius": Item_Radius
     }
+    if Item_Radius != None:
+        payload["Item_Radius"] = Item_Radius
+        payload["Item_Center_Weight"] = Item_Center_Weight
+        payload["Maximum_Assessment"] = Maximum_Assessment
+
+
     response = requests.post(url, headers=client.headers, json=payload)
     assert response.status_code == 200
     return response.json()
