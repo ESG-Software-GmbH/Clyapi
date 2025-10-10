@@ -5,6 +5,14 @@ the full api can be found in the climcycle app documentations tab.
 
 ## Setup
 ### Linux and Mac
+Create a virtual environment:
+```
+python3 -m venv .
+```
+Activate the virtual environment:
+```
+source ./bin/activate
+```
 Install the tool via pip and git:
 ```
 pip install git+https://github.com/ESG-Software-GmbH/Clyapi
