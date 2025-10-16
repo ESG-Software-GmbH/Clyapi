@@ -1,1 +1,2 @@
-from . import endpoints, client
+from . import client
+from . endpoints import *

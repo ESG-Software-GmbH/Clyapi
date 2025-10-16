@@ -6,7 +6,7 @@ api_statics = {
     "Dev": {
         "Url_Prefix": "https://api-burgundy.climcycle.com",
         "Resource_Id": "api://a14d8f54-c6a9-49cc-92a7-b15cace0ef36/.default",
-        "Tenant": "bc476d08-a9ed-49be-8727-6c547166d422"
+        "Tenant": "39b3a7aa-da94-46aa-99fa-f8982fef11fc"
     },
     "PreProd": {
         "Url_Prefix": "https://api-preprod.climcycle.com",
