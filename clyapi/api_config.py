@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import json
 
-api_statics = {
+API_STATICS = {
     "Dev": {
         "Url_Prefix": "https://api-burgundy.climcycle.com",
         "Resource_Id": "api://a14d8f54-c6a9-49cc-92a7-b15cace0ef36/.default",
@@ -23,7 +23,7 @@ api_statics = {
 
 class InstitutionConfig:
     def __init__(self, name, environment, client_application_id, client_secret):
-        statics = api_statics[environment]
+        statics = API_STATICS[environment]
 
         self.name = name                                    # local name of the institution
         self.environment = environment                      # either Prod, Preprod, or Dev

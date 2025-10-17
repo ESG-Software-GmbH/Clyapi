@@ -1,36 +1,9 @@
 from clyapi.client import Client
-import pandas as pd
-import requests
-import time
-import csv
 from io import StringIO
-import os
+import clyapi.endpoints.calculation.calculation_utils as cu
+import pandas as pd
 
-
-def call_batch_upload_endpoint(client, csv_path, preset=None, calculation_type=None, result_unit=None):
-    """Upload batch file to ScheduleBatchFile endpoint."""
-    url = f"{client.institution.url_prefix}/api/v3.5/Calculation/ScheduleBatchFile"
-    payload = {}
-    if preset:
-        payload["scorePresetCode"] = preset
-    if calculation_type:
-        payload["calculationType"] = calculation_type
-
-
-    # file_dict = {os.path.basename(csv_path): csv_path}
-    # files = [("files", (key, open(value, "rb"), "text/csv")) for key, value in file_dict.items()]
-    # files = {"files": open(csv_path, "rb")}
-    with open(csv_path, "rb") as f:
-        files = {"files": (csv_path, f, "text/csv")}
-
-        print("Uploading to:", url)
-        print(payload)
-        response = requests.post(url, headers=client.headers, json=payload, files=files, verify=False)
-    print(response)
-    return response
-
-
-def physical_climate_risks_batch(client: Client, input_filepath: str, separator: str = ",", score_preset:str = None):
+def pcr_batch(client: Client, input_filepath: str, score_preset:str = None) -> str:
     """
 
     Parameters
@@ -39,70 +12,38 @@ def physical_climate_risks_batch(client: Client, input_filepath: str, separator:
         clyapi client for authentification
     input_filepath: str
         Local filepath of the input .csv file. Column specification can be read from the Climcycle data requirements
-    separator: str
-        Optional CSV separator, defaults to ",".
     score_preset: str
         Preset of PCR scoring preset. Defaults to Climcycle Default Preset
     Returns
     -------
-    output_filepath: str
+    csv_string: str  response file content as string
     """
-    url_prefix = client.institution.url_prefix
-    schedule_url = f"{url_prefix}/api/v3.5/Calculation/ScheduleBatchFile"
-    result_info_url = f"{url_prefix}/api/v3.5/Calculation/ResultFilesInfo"
-    download_csv_url = f"{url_prefix}/api/v3.5/Download/ResultFileCSV"
 
+    upload_response = cu.call_batch_upload_endpoint(client, input_filepath, score_preset, "PCR")
+    calculation_id = upload_response["data"]["calculationResultId"]  #get calculation id from response
 
-    payload = {}
-    # if score_preset:
-    # payload["scorePresetCode"] = score_preset
-    payload["calculationType"] = "ESG"
+    result_file_info =cu.get_result_files_info(client, calculation_id, wait_seconds=1)
+    file_id = result_file_info["resultFiles"][0]["id"]
 
-    file_dict = {os.path.basename(input_filepath): input_filepath}
-    files = [("files", (key, open(value, "rb"), "text/csv")) for key, value in file_dict.items()]
+    response_content = cu.get_result_file_csv(client, file_id)
+    csv_content = response_content.content.decode("utf-8")
 
-    print("Uploading to:", schedule_url)
-    response = requests.post(schedule_url, headers=client.headers, data=payload, files=files, verify=True)
-    print(response)
-    print(response.json())
+    return csv_content
 
-    max_wait = 60
-    interval = 5
-    waited = 0
-    result_file_id = None
+def pcr_batch_to_file(client: Client, input_filepath: str, output_filepath, score_preset:str = None) -> None:
+    csv_content = pcr_batch(client, input_filepath)
+    # Write to a CSV file
+    with open(output_filepath, "w", encoding="utf-8", newline="") as f:
+        f.write(csv_content)
+    print(f"saved pcr portfolio as csv file to {output_filepath}")
+    return
 
-    while waited < max_wait:
-        result_response = requests.get(result_info_url, headers=client.headers, params={"calculationId": calc_id})
-        assert result_response.status_code == 200
-        result_data = result_response.json()
-        if result_data.get("resultFiles"):
-            result_file_id = result_data["resultFiles"][0]["id"]
-            break
-        time.sleep(interval)
-        waited += interval
+def pcr_batch_to_dataframe(client: Client, input_filepath: str, score_preset:str = None) -> pd.DataFrame:
+    csv_content = pcr_batch(client, input_filepath)
+    csv_buffer = StringIO(csv_content)
+    df = pd.read_csv(csv_buffer)
+    return df.iloc[:,1:]   # drop first column, which for some reason get added by the endpoint
 
-    assert result_file_id
-
-    waited = 0
-    csv_content = None
-
-    while waited < max_wait:
-        download_response = requests.get(download_csv_url, headers=client.headers, params={"resultFileId": result_file_id})
-        if download_response.status_code == 200:
-            csv_content = download_response.content.decode("utf-8")
-            break
-        elif download_response.status_code == 202:
-            time.sleep(interval)
-            waited += interval
-        else:
-            download_response.raise_for_status()
-
-    assert csv_content
-
-    csv_reader = csv.reader(StringIO(csv_content))
-    rows = list(csv_reader)
-    header = rows[0]
-    first_row = rows[1]
 
 if __name__ == "__main__":
     import numpy as np
@@ -121,12 +62,14 @@ if __name__ == "__main__":
         "GCA_Share": 1.0,
         "Item_Nace_Code": "D 35.11"
     }
-    file_path = "/Users/leonardmueller/Documents/git/Clyapi/clyapi/endpoints/calculation/pcr_input.csv"
-    file_path = "/Users/leonardmueller/Documents/Physical_Climate_Risks_Template.csv"
-    # df = pd.DataFrame(test_dict)
-    # df.to_csv(file_path, index=False)
+    file_path = "/Users/leonardmueller/Documents/git/Clyapi/data/batch_example_portfolios/pcr_input.csv"
+
 
     client = Client("Stark Bank")
     print(client)
-    # physical_climate_risks_batch(client, file_path)
-    call_batch_upload_endpoint(client,file_path, calculation_type="PCR")
+
+    pcr_batch(client, file_path)
+    pcr_batch_to_file(client, file_path, "test_pcr_out")
+
+    df = pcr_batch_to_dataframe(client, file_path)
+    print(df)
