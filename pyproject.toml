@@ -3,6 +3,9 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mypackage"
+name = "clyapi"
 version = "0.1.0"
-dependencies = ["requests"]
+dependencies = ["requests", "pandas"]
+
+[tool.setuptools]
+packages = ["clyapi"]

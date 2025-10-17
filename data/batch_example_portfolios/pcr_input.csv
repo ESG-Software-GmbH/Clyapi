@@ -1,0 +1,6 @@
+Counterparty_ID,Transaction_ID,Item_ID,Item_Longitude,GCA,GCA_Share,Item_Latitude,Item_Origination_Date,Item_Maturity_Date,Item_NACE_Code
+Company A,T1,Item_1,2.3522,100000,0.32,48.8566,2013-08-05,2022-12-31,D 35.11
+Company B,T2,Installation_of_Photovoltaic_System,10.4515,2130000,0.26,51.1567,2017-10-06,2022-12-31,
+Company C,T3,Credit_for_Vehicles,12.4964,430089277,0.57,41.9028,2020-08-30,2022-12-31,F 43
+Household 1,T4,Item_4,37.6176,12098,0.09,55.7558,2023-03-22,2022-12-31,
+Household 2,T5,Building,-3.7038,13947,0.6,40,2019-01-10,2022-12-31,U 97
