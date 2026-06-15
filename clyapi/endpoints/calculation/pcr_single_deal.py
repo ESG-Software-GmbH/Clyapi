@@ -45,7 +45,7 @@ def pcr_single_deal(client: Client, Item_Longitude: float, Item_Latitude: float,
         nested dictionary of PCR risks and associated values.
     """
 
-    url = f"{client.institution.url_prefix}/api/v3.5/Calculation/CalculateSinglePhysicalRisks"
+    url = f"{client.institution.url_prefix}/v3.5/Calculation/CalculateSinglePhysicalRisks"
     payload = {
         "Score_Preset_Code": Score_Preset_Code,
         "Counterparty_ID": Counterparty_ID,

@@ -1,6 +1,6 @@
 from clyapi.client import Client
 from io import StringIO
-import clyapi.endpoints.calculation.calculation_utils as cu
+import clyapi.endpoints.Calculation.calculation_utils as cu
 import pandas as pd
 
 def pcr_batch(client: Client, input_filepath: str, score_preset:str = None) -> str:
