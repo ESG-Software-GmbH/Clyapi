@@ -4,17 +4,17 @@ import json
 
 API_STATICS = {
     "Dev": {
-        "Url_Prefix": "https://api-burgundy.climcycle.com",
+        "Url_Prefix": "https://api-burgundy.climcycle.com/api",
         "Resource_Id": "api://a14d8f54-c6a9-49cc-92a7-b15cace0ef36/.default",
         "Tenant": "39b3a7aa-da94-46aa-99fa-f8982fef11fc"
     },
     "PreProd": {
-        "Url_Prefix": "https://api-preprod.climcycle.com",
+        "Url_Prefix": "https://api-preprod.climcycle.com/api",
         "Resource_Id": "api://ad585325-c053-499f-97f5-e1bb8d4fad2c/.default",
         "Tenant": "bc476d08-a9ed-49be-8727-6c547166d422"
     },
     "Prod": {
-        "Url_Prefix": "https://api.climcycle.com",
+        "Url_Prefix": "https://api.climcycle.com/api",
         "Resource_Id": "api://cb686320-988c-4884-95d0-9dc843542f1b/.default",
         "Tenant": "1998ba70-dfcb-4c3a-bda7-a8d80d324354"
     }
@@ -22,7 +22,7 @@ API_STATICS = {
 
 
 class InstitutionConfig:
-    def __init__(self, name, environment, client_application_id, client_secret):
+    def __init__(self, name, environment, client_application_id, client_secret, type):
         statics = API_STATICS[environment]
 
         self.name = name                                    # local name of the institution
@@ -32,6 +32,7 @@ class InstitutionConfig:
         self.resource_id = statics["Resource_Id"]           # Climcycle master app registration Id
         self.client_application_id = client_application_id  # Application Id of the institution
         self.client_secret = client_secret                  # api secret of the institution
+        self.type = type                                    # relationship type (regular, parent, child)
 
         self.auth_url = "https://login.microsoftonline.com/" + self.tenant + "/oauth2/v2.0/token"
 
@@ -42,14 +43,25 @@ class InstitutionConfig:
 
 class ConfigManager:
     def __init__(self):
-        config_dict = self.load_config_json()
+        self.config_json = self.load_config_json()
+        self.institutions = self.parse_config(self.config_json)
+        self.active_institution = None
+        self.institution_reset_key = self.config_json.get("Climcycle_Admin_Credentials").get("Reset_Institution_Key")
 
-        institutions = {}
-        for name, config in config_dict.items():
-            institution = InstitutionConfig(name, config["Environment"], config["Client_Application_Id"], config["Client_Secret"])
-            institutions[name] = institution
-        self.institutions = institutions
-        self.active_institution = list(institutions.values())[0]
+
+    def parse_config(self, config_json):
+        config_dict = config_json["Institution_Configs"]
+
+        environments = {}
+        for environment, config_dict in config_dict.items():
+            assert environment in list(API_STATICS.keys()), f"environemnt {environment} not supported"
+            env_institutions = {}
+            for name, config in config_dict.items():
+                institution = InstitutionConfig(name, environment, config["Client_Application_Id"], config["Client_Secret"], config["Type"])
+                env_institutions[name] = institution
+            environments[environment] = env_institutions
+
+        return environments
 
     def load_config_json(self):
         config_path = Path(os.getenv("MYAPI_CONFIG", Path.home() / ".clyapi" / "config.json"))
@@ -59,12 +71,15 @@ class ConfigManager:
 
         except:
             dummy_instconfig = {
-                "Your_Instname": {
-                    "Environment": "Prod",
-                    "Client_Application_Id": "some_uuid",
-                    "Client_Secret": "some_uuid"
+                "Prod":
+                {
+                    "Your_Instname": {
+                        "Environment": "Prod",
+                        "Client_Application_Id": "some_uuid",
+                        "Client_Secret": "some_uuid"
+                    }
                 }
-                                }
+            }
             raise FileNotFoundError(f"config file has not been foung under \n{config_path} \n"
                                     f"please create the file with the following json schema: \n"
                                     f"{json.dumps(dummy_instconfig, indent=4)} \n"
@@ -72,14 +87,15 @@ class ConfigManager:
 
         return config_dict
 
-    def activate_instituion(self, institution_name: str):
-        self.active_institution = self.institutions[institution_name]
+    def activate_institution(self, environemnt:str, institution_name: str):
+        self.active_institution = self.institutions[environemnt][institution_name]
 
     def __str__(self):
         str_list = []
-        for institution in self.institutions.values():
-            inst_str = institution.__str__()
-            str_list.append(inst_str)
+        for environemnt, institutions in self.institutions.items():
+            for institution in institutions.values():
+                inst_str = institution.__str__()
+                str_list.append(inst_str)
         prnt_str = "\n".join(str_list)
         return prnt_str
 
@@ -90,4 +106,5 @@ if __name__ == "__main__":
     config = ConfigManager()
     # print(config)
     # print(config.active_institution)
-    config.activate_instituion("Quality Assurance Climcycle")
+    config.activate_institution("Dev", "Stark Bank")
+    print(config.active_institution)

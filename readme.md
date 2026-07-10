@@ -26,17 +26,19 @@ Example config.json:
 
 ```json
 {
-"Your Institution 1":
-  {
-    "Environment": "Prod",
-    "Client_Application_Id": "application uuid",
-    "Client_Secret": "secret uuid"
-  },
-  "Your Institution 2":
-  {
-    "Environment": "PreProd",
-    "Client_Application_Id": "application uuid",
-    "Client_Secret": "secret uuid"
+  "Institution_Configs": {
+    "Preprod": {
+      "Your Institution 1": {
+        "Client_Application_Id": "application uuid",
+        "Client_Secret": "secret uuid"
+      }
+    },
+    "Prod": {
+      "Your Institution 2": {
+        "Client_Application_Id": "application uuid",
+        "Client_Secret": "secret uuid"
+      }
+    }
   }
 }
 ```

@@ -36,7 +36,7 @@ def call_batch_upload_endpoint(client:Client, csv_path: str, preset: str =None, 
 
 def get_result_files_info(client: Client, calculation_id, max_attempts=30, wait_seconds=5):
     """Poll ResultFilesInfo until results are available or timeout."""
-    url = f"{client.institution.url_prefix}/api/v3.5/Calculation/ResultFilesInfo"
+    url = f"{client.institution.url_prefix}/v3.5/Calculation/ResultFilesInfo"
     params = {"calculationId": calculation_id}
 
     for attempt in range(1, max_attempts + 1):
@@ -72,7 +72,7 @@ def get_result_files_info(client: Client, calculation_id, max_attempts=30, wait_
 def get_result_file_csv(client: Client, result_file_id):
     print(f"downloading result file with id: {result_file_id}", end="\r")
 
-    url = f"{client.institution.url_prefix}/api/v3/Download/ResultFileCSV?resultFileId=" + result_file_id
+    url = f"{client.institution.url_prefix}/v3/Download/ResultFileCSV?resultFileId=" + result_file_id
     response = requests.request("GET", url, headers=client.get_json_header(), verify=True)
 
     print(f"successfully downloaded result file with id: {result_file_id}")

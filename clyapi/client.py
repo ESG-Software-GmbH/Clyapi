@@ -1,5 +1,5 @@
 import requests
-from clyapi.api_config import config, InstitutionConfig
+from clyapi.api_config import ConfigManager, InstitutionConfig
 
 
 class Client:
@@ -8,12 +8,13 @@ class Client:
     configuration file under ~/.clyapi/config.json with settings for institutions.
     """
 
-    def __init__(self, profile: str | None = None):
+    def __init__(self, environment: str, institution_name: str | None = None):
         # If a profile is explicitly given, activate it
-        if profile:
-            config.activate_instituion(profile)
+        self.config = ConfigManager()
+        if institution_name:
+            self.config.activate_institution(environment, institution_name)
         # Read the currently active configuration
-        self.institution: InstitutionConfig = config.active_institution
+        self.institution: InstitutionConfig = self.config.active_institution
 
 
     def get_access_token(self):
@@ -47,12 +48,21 @@ class Client:
         }
         return headers
 
+    def get_active_url_prefix(self):
+        return self.institution.url_prefix
+
+    def get_legacy_env_setup(self, entity_id=None):
+        return {
+            "api_url": self.institution.url_prefix,
+            "headers": None,
+            "token": self.get_access_token(),
+            "institution_type": self.institution.type,
+            "entity_type": entity_id,
+        }
 
     def __str__(self):
         return f"Active Institution:\n {self.institution}"
 
 if __name__ == "__main__":
-    client = Client()
-    token = client.get_access_token()
-    print(client.get_institution_info())
-    # print(token)
+
+    pass
