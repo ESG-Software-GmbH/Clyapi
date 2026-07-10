@@ -1,1 +1,1 @@
-from clyapi.endpoints import Calculation, Institution, Import, Export, DatabaseCalculation
+from clyapi.endpoints import Calculation, Institution, Import, Export, DatabaseCalculation, CalculationResultExport

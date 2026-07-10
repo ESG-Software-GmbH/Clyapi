@@ -55,13 +55,14 @@ def download_complete_data(client: Client, operation_id: str, timeout_minutes: i
         response = requests.get(url, headers=headers, stream=True, verify=True)
         if response.status_code == 200:
             return response
-        time.sleep(10)
-        total_wait += 10
+        time.sleep(60)
+        headers = client.get_batch_header()
+        total_wait += 60
 
     raise TimeoutError(f"Timed out waiting for export {operation_id} to be ready for download.")
 
 
-def export_and_download_complete(client: Client, save_path: str | None = None, timeout_minutes: int = 60) -> requests.Response:
+def export_and_download_complete(client: Client, save_path: str | None = None, timeout_minutes: int = 300) -> requests.Response:
     response = export_complete_data(client)
     response.raise_for_status()
     operation_id = response.json()["operationId"]
