@@ -181,11 +181,11 @@ class InitialImportGenerator:
 if __name__ == "__main__":
     # entity_ids = ["LE_P_VTwo", "LEC1_VTwo", "LEC2_VTwo"]
     entity_ids = ["strtst"]
-    initial_generator = InitialImportGenerator(25,2,2, prefix="leo_perf_test", entity_ids=entity_ids)
+    initial_generator = InitialImportGenerator(500000,2,1, prefix="leo_perf_test", entity_ids=entity_ids)
     paths = initial_generator.write_import_files()
-    client = clyapi.client.Client("Dev", "stress-testing")
-    clyapi.endpoints.Institution.reset_institution(client)
-    clyapi.endpoints.Import.initial_import(client, *paths)
+    # client = clyapi.client.Client("Dev", "stress-testing")
+    # clyapi.endpoints.Institution.reset_institution(client)
+    # clyapi.endpoints.Import.initial_import(client, *paths)
 
     # files_dict = initial_generator.get_request_dict()
     #

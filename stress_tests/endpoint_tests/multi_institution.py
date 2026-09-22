@@ -354,8 +354,9 @@ def calc_stress(client_dict, modules=None):
 
 
 if __name__ == "__main__":
-    client_dict = build_client_dict(stress_institutions[:1])
-    # import_stress(client_dict, num_cp=25000)
+    dev_institutions = ["dev-stresstest1", "dev-stresstest2", "dev-stresstest3", "dev-stresstest4", "dev-stresstest5"]
+    client_dict = build_client_dict(dev_institutions, environment="Dev")
+    import_stress(client_dict, num_cp=1)
     # export_stress(client_dict)
-    calc_stress(client_dict, CALCULATION_MODULES[:1])
+    # calc_stress(client_dict, CALCULATION_MODULES[:1])
     # calc_result_export_stress(client_dict, recent=False)

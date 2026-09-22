@@ -64,5 +64,6 @@ def pcr_single_deal(client: Client, Item_Longitude: float, Item_Latitude: float,
 
 
     response = requests.post(url, headers=client.get_json_header(), json=payload)
-    assert response.status_code == 200
+    if response.status_code != 200:
+        raise Exception(f"pcr single deal failed with {response.status_code}: \n {response.text}")
     return response.json()
