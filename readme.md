@@ -3,8 +3,16 @@ Clyapi is a python wrapper for the Climcycle api. This allows to perform climcyc
 So far this repository is a work in progress with only a subset of the Climcycle api implemented. The documentation for 
 the full api can be found in the climcycle app documentations tab.
 
+> **Using an AI coding assistant?** Point it at [AGENTS.md](AGENTS.md).
+> It can handle install and usage; credential setup is yours to do.
+
 ## Setup
 ### Linux and Mac
+Clone the repository and switch into it:
+```
+git clone https://github.com/ESG-Software-GmbH/Clyapi
+cd Clyapi
+```
 Create a virtual environment:
 ```
 python3 -m venv .
@@ -13,11 +21,15 @@ Activate the virtual environment:
 ```
 source ./bin/activate
 ```
-Install the tool via pip and git:
+Install the tool locally into the virtual environment:
 ```
-pip install git+https://github.com/ESG-Software-GmbH/Clyapi
+pip install -e .
 ```
+Installing from the repo root means an AI coding assistant working here can
+also read the [AGENTS.md](AGENTS.md) and the `skills/` directory for guidance.
 Create a config files for storing the credentials in the home directory (paste into shell):
+> ⚠️ Do this step yourself. Never let an AI assistant read or write
+> `~/.clyapi/config.json`.
 ```bash
 mkdir ~/.clyapi
 nano ~/.clyapi/config.json
