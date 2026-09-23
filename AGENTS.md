@@ -25,12 +25,36 @@ Credentials are set by the human operator, always.
 ## The credential step
 
 After `pip install -e .` succeeds, stop. Print the block below to the user
+verbatim, then wait for them to confirm they are done.
+
+---
+**Set up your Climcycle credentials**
+
+Open a terminal and run:
+
+```
+mkdir -p ~/.clyapi
+nano ~/.clyapi/config.json
+```
+
+Paste this, replacing the placeholders:
+
+```json
+{
+  "Institution_Configs": {
+    "Prod": {
+      "Your Institution": {
+        "Client_Application_Id": "application uuid",
+        "Client_Secret": "secret uuid",
+        "Type": "Regular"
+      }
+    }
   }
 }
 ```
 
-Use `"Preprod"` instead of `"Prod"` for the preprod environment. The
-institution name can be anything, but use the same name as in the
+Use `"Preprod"` instead of `"Prod"` for the preprod environment. There is also "Dev" for the internal development environment.
+The institution name can be anything, but use the same name as in the
 Climcycle app. Find both UUIDs under **Secret Management** in the
 Climcycle app — you need the User Admin role.
 
