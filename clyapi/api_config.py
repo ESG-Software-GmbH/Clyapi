@@ -46,7 +46,7 @@ class ConfigManager:
         self.config_json = self.load_config_json()
         self.institutions = self.parse_config(self.config_json)
         self.active_institution = None
-        self.institution_reset_key = self.config_json.get("Climcycle_Admin_Credentials").get("Reset_Institution_Key")
+        self.institution_reset_key = self.config_json.get("Climcycle_Admin_Credentials", {}).get("Reset_Institution_Key")
 
 
     def parse_config(self, config_json):

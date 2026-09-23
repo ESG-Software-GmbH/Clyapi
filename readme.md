@@ -42,13 +42,15 @@ Example config.json:
     "Preprod": {
       "Your Institution 1": {
         "Client_Application_Id": "application uuid",
-        "Client_Secret": "secret uuid"
+        "Client_Secret": "secret uuid",
+        "Type": "Regular"
       }
     },
     "Prod": {
       "Your Institution 2": {
         "Client_Application_Id": "application uuid",
-        "Client_Secret": "secret uuid"
+        "Client_Secret": "secret uuid",
+        "Type": "Parent"
       }
     }
   }
@@ -63,7 +65,7 @@ Getting started:
 ```python
 import clyapi
 
-client = clyapi.client.Client("Your Institution 1")
+client = clyapi.client.Client("Preprod", "Your Institution 1")
 print(client)
 
 # test the connection

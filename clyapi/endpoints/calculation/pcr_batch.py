@@ -65,7 +65,7 @@ if __name__ == "__main__":
     file_path = "/Users/leonardmueller/Documents/git/Clyapi/data/batch_example_portfolios/pcr_input.csv"
 
 
-    client = Client("Stark Bank")
+    client = Client("Dev", "Stark Bank")
     print(client)
 
     pcr_batch(client, file_path)

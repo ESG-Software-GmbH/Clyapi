@@ -67,3 +67,18 @@ def pcr_single_deal(client: Client, Item_Longitude: float, Item_Latitude: float,
     if response.status_code != 200:
         raise Exception(f"pcr single deal failed with {response.status_code}: \n {response.text}")
     return response.json()
+
+
+if __name__ == "__main__":
+    client = Client("Dev", "Stark Bank")
+    print(client)
+
+    result = pcr_single_deal(
+        client,
+        Item_Longitude=13.4050,
+        Item_Latitude=52.5200,
+        Item_Origination_Date="2025-01-01",
+        Item_Maturity_Date="2055-01-01",
+        Item_Nace_Code="D 35.11",
+    )
+    print(result)

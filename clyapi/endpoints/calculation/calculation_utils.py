@@ -10,7 +10,7 @@ import os
 
 def call_batch_upload_endpoint(client:Client, csv_path: str, preset: str =None, calculation_type: str=None, result_unit=None) -> dict:
     """Upload batch file to ScheduleBatchFile endpoint."""
-    url = f"{client.institution.url_prefix}/api/v3.5/Calculation/ScheduleBatchFile"
+    url = f"{client.institution.url_prefix}/v3.5/Calculation/ScheduleBatchFile"
     payload = {}
     if preset:
         payload["scorePresetCode"] = preset
@@ -34,7 +34,7 @@ def call_batch_upload_endpoint(client:Client, csv_path: str, preset: str =None, 
 # ------------------------------
 
 
-def get_result_files_info(client: Client, calculation_id, max_attempts=30, wait_seconds=5):
+def get_result_files_info(client: Client, calculation_id, max_attempts=100, wait_seconds=5):
     """Poll ResultFilesInfo until results are available or timeout."""
     url = f"{client.institution.url_prefix}/v3.5/Calculation/ResultFilesInfo"
     params = {"calculationId": calculation_id}

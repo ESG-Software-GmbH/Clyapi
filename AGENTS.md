@@ -45,7 +45,8 @@ Paste this, replacing the placeholders:
     "Prod": {
       "Your Institution": {
         "Client_Application_Id": "application uuid",
-        "Client_Secret": "secret uuid"
+        "Client_Secret": "secret uuid",
+        "Type": "Regular"
       }
     }
   }
@@ -67,7 +68,7 @@ Once the user confirms, check the connection:
 
 ```python
 import clyapi
-client = clyapi.client.Client("<institution name the user gave you>")
+client = clyapi.client.Client("<environment, e.g. Prod>", "<institution name the user gave you>")
 print(clyapi.endpoints.institution.institution_info(client))
 ```
 
