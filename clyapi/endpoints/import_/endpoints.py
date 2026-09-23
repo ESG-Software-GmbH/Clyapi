@@ -59,7 +59,7 @@ def full_import_status(client, resultId) -> requests.Response:
 if __name__ == '__main__':
     client: Client = Client("Dev", "stress-testing")
     # print(client)
-    # print(clyapi.endpoints.Institution.institution_info(client))
+    # print(clyapi.endpoints.institution.institution_info(client))
     cp_path = "stress_tests/endpoint_tests/caches/initial_import_files/cp.csv"
     ta_path = "stress_tests/endpoint_tests/caches/initial_import_files/ta.csv"
     it_path = "stress_tests/endpoint_tests/caches/initial_import_files/it.csv"

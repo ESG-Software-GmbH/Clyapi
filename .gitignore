@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+bin/
+lib/
+lib64/
+include/
+pyvenv.cfg
+.venv/
+venv/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

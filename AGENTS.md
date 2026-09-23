@@ -25,30 +25,6 @@ Credentials are set by the human operator, always.
 ## The credential step
 
 After `pip install -e .` succeeds, stop. Print the block below to the user
-verbatim, then wait for them to confirm they are done.
-
----
-**Set up your Climcycle credentials**
-
-Open a terminal and run:
-
-```
-mkdir -p ~/.clyapi
-nano ~/.clyapi/config.json
-```
-
-Paste this, replacing the placeholders:
-
-```json
-{
-  "Institution_Configs": {
-    "Prod": {
-      "Your Institution": {
-        "Client_Application_Id": "application uuid",
-        "Client_Secret": "secret uuid",
-        "Type": "Regular"
-      }
-    }
   }
 }
 ```

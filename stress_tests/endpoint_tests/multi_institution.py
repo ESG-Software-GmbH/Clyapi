@@ -154,14 +154,14 @@ class MultiInstitutionRunner:
 # ------------------------------
 
 def op_reset(client):
-    return clyapi.endpoints.Institution.reset_institution(client)
+    return clyapi.endpoints.institution.reset_institution(client)
 
 
 def op_initial_import(client, counterpartyFile, transactionFile, itemFile):
-    return clyapi.endpoints.Import.initial_import(client, counterpartyFile, transactionFile, itemFile)
+    return clyapi.endpoints.import_.initial_import(client, counterpartyFile, transactionFile, itemFile)
 
 def op_full_export(client):
-    response = clyapi.endpoints.Export.export_and_download_complete(client)
+    response = clyapi.endpoints.export.export_and_download_complete(client)
     # Drain the streamed ZIP without saving; count bytes for the metrics CSV.
     response_bytes = sum(len(chunk) for chunk in response.iter_content(chunk_size=65536))
     return {"response_bytes": response_bytes}
@@ -246,7 +246,7 @@ def op_database_calculations_all(client, modules):
         calc_name = f"stress_{calc_type}_{datetime.now().strftime('%H%M%S')}"
         t0 = time.time()
         try:
-            details = clyapi.endpoints.DatabaseCalculation.run_database_calculation(
+            details = clyapi.endpoints.database_calculation.run_database_calculation(
                 client,
                 calculation_name=calc_name,
                 **module_cfg,
@@ -287,7 +287,7 @@ def op_calculation_result_export_all(client, modules, recent=True):
     def _run_module(calculation_type):
         t0 = time.time()
         try:
-            response = clyapi.endpoints.CalculationResultExport.export_and_download_calculation_results(
+            response = clyapi.endpoints.calculation_result_export.export_and_download_calculation_results(
                 client,
                 calculation_type=calculation_type,
                 recent=recent,
